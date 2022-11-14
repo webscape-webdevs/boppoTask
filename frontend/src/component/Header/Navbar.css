@@ -1,0 +1,200 @@
+.navbar {
+    display: flex;
+    justify-content: flex-start;
+    position: fixed;
+    /* padding: 2rem ;  */
+    top:3vmax;
+    left: 3vmax;
+    z-index:10;
+}
+
+.navbar-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    background-color: azure;
+    position: fixed;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+
+.navbar-links{
+   flex: 0.8;
+   display: flex;
+   justify-content: flex-start;
+   align-items: center;
+}
+
+.navbar-links-container{
+    display: flex;
+    flex-direction: row;
+    padding-left: 40px;
+    
+}
+
+.navbar-links-container p{
+    padding-right: 50px;
+}
+
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.navbar-signup-button{
+    color: #fff;
+    font-family:'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.navbar-buttons{
+    color: black;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25px;
+    text-transform: capitalize;
+
+}
+
+.navbar-menu-container p {
+    color: black;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25px;
+    text-transform: capitalize;
+
+    margin: 0 1rem;
+    cursor: pointer;
+}
+
+.navbar-sign button,
+.navbar-menu-container button {
+    padding: 0.5rem 1rem;
+    color: #fff;
+    background: #3498db;
+    font-family:'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.navbar-signup-button:hover{
+    background-color: #3cb0fd;
+}
+
+.navbar-menu {
+    margin-left: 1rem;
+    display: none;
+    position: relative;
+}
+
+.navbar-menu svg {
+    cursor: pointer;
+}
+
+.navbar-menu-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    text-align: start;
+    background: white;
+    padding: 2rem;
+    position: absolute;
+    top: 40px;
+    margin-top: 1.5rem;
+    min-width: 210px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0,0, 0,0.2);
+    z-index: 5;
+    
+}
+
+
+.navbar-menu-container p {
+    margin: 1rem 0;
+ 
+}
+
+
+@media screen and (max-width: 1050px) {
+    .navbar{
+        justify-content: flex-start;
+    }
+
+    .navbar-container{
+        display: none;
+    }
+
+    .navbar-menu {
+        display: flex;
+        
+    }
+
+    .navbar-buttons{
+        color: black;
+    }
+
+    .navbar-cart-search-non-menu{
+        display: block;
+     }
+     
+
+    
+}
+
+@media screen and (max-width: 700px) {
+
+    .navbar {
+        padding:0;
+        padding-top: 1rem;
+        left: 0;
+        top:0;
+    }
+    .navbar-cart-search-non-menu{
+        display: none;
+     }
+     
+     .navbar-cart-search-menu{
+        display: flex;
+        flex-direction: column;
+     }
+}
+
+@media screen and (max-width: 550px) {
+    .navbar {
+        padding:0;
+        padding-top: 1rem;
+        left: 0;
+        top:0;
+    }
+
+    .navbar-sign {
+        display: none;
+    }
+
+    .navbar-menu-container {
+        top: 20px;
+    }
+
+    .navbar-menu-container-links-sign {
+        display: block;
+    }
+}
