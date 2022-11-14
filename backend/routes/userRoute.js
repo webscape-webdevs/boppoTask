@@ -6,13 +6,15 @@ const EmployeesSchema = require("../models/employeesModel");
 const sendToken = require("../utils/jwtToken");
 const ApiFeatures = require("../utils/apifeatures");
 const router = express.Router();
+const { isAuthenticatedUser } = require("../middleware/auth");
+const createError = require("http-errors");
 
 // Register a User
 router.post(
   "/userRegister",
   catchAsyncErrors(async (req, res, next) => {
     const { firstName, lastName, email, password, userType, organizationName } = req.query;
-    if(userType === "employee"){
+    if (userType === "employee") {
       const user = await EmployeesSchema.create({
         firstName,
         lastName,
@@ -22,9 +24,7 @@ router.post(
       });
 
       sendToken(user, 201, res);
-
     } else {
-
       const user = await User.create({
         firstName,
         lastName,
@@ -33,10 +33,7 @@ router.post(
       });
 
       sendToken(user, 201, res);
-
     }
-
-
   })
 );
 
@@ -68,6 +65,7 @@ router.post(
   })
 );
 
+// Login Employee
 router.post(
   "/employeeLogin",
   catchAsyncErrors(async (req, res, next) => {
@@ -111,38 +109,40 @@ router.get(
   })
 );
 
-
-
 // Get user list
-router.get(
-  "/getUsersAndEmployeeList",
-  catchAsyncErrors(async (req, res, next) => {
-    const resultPerPage = 10;
-    const userCount = await User.countDocuments();
-    const employeeCount = await EmployeesSchema.countDocuments();
+router.get("/getUsersAndEmployeeList", isAuthenticatedUser, async (req, res, next) => {
+  try {
+    if (req.employee) {
+      const resultPerPage = 10;
+      const userCount = await User.countDocuments();
+      const employeeCount = await EmployeesSchema.countDocuments();
 
-    const apiFeatureUser = new ApiFeatures(User.find(), req.query)
-    let userList = await apiFeatureUser.query;
-    apiFeatureUser.pagination(resultPerPage);
-    userList = await apiFeatureUser.query;
+      const apiFeatureUser = new ApiFeatures(User.find(), req.query);
+      let userList = await apiFeatureUser.query;
+      apiFeatureUser.pagination(resultPerPage);
+      userList = await apiFeatureUser.query;
 
-    const apiFeatureEmployee = new ApiFeatures(EmployeesSchema.find(), req.query)
-    let employeeList = await apiFeatureEmployee.query;
-    apiFeatureEmployee.pagination(resultPerPage);
-    employeeList = await apiFeatureEmployee.query;
+      const apiFeatureEmployee = new ApiFeatures(EmployeesSchema.find(), req.query);
+      let employeeList = await apiFeatureEmployee.query;
+      apiFeatureEmployee.pagination(resultPerPage);
+      employeeList = await apiFeatureEmployee.query;
 
+      res.status(200).json({
+        success: true,
+        userList,
+        userCount,
 
-    res.status(200).json({
-      success: true,
-      userList,
-      userCount,
+        employeeList,
+        employeeCount,
 
-      employeeList,
-      employeeCount,
-
-      resultPerPage,
-    });
-  })
-);
+        resultPerPage,
+      });
+    } else {
+      return next(new ErrorHander("Not Authorized", 401));
+    }
+  } catch (error) {
+    return next(createError.InternalServerError(error));
+  }
+});
 
 module.exports = router;
