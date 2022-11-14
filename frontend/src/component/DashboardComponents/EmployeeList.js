@@ -5,19 +5,22 @@ import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../../views/MetaData";
 import SideBar from "./Sidebar";
 import { getUsersAndEmployeeList } from "../../slices/userListSlice";
+import { useState } from "react";
+import Pagination from "react-js-pagination";
 
 const EmployeeList = ({ history }) => {
   const dispatch = useDispatch();
 
-  const { employeeList } = useSelector((state) => state.userListSlice);
+  const { resultPerPage, employeeCount, employeeList } = useSelector((state) => state.userListSlice);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const setCurrentPageNo = (e) => {
+    setCurrentPage(e);
+  };
 
   useEffect(() => {
- 
-
-    dispatch(getUsersAndEmployeeList());
-
-  }, [dispatch]);
+    dispatch(getUsersAndEmployeeList(currentPage));
+  }, [dispatch, currentPage]);
 
   const columns = [
     { field: "id", headerName: "Employee ID", minWidth: 180, flex: 0.7 },
@@ -55,16 +58,13 @@ const EmployeeList = ({ history }) => {
       type: "number",
       minWidth: 150,
       flex: 0.3,
-   
     },
-
-
   ];
 
   const rows = [];
 
   employeeList &&
-  employeeList.forEach((item) => {
+    employeeList.forEach((item) => {
       rows.push({
         id: item._id,
         role: item.role,
@@ -84,14 +84,27 @@ const EmployeeList = ({ history }) => {
         <div className="productListContainer">
           <h1 id="productListHeading">EMPLOYEES LIST</h1>
 
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            className="productListTable"
-            autoHeight
-          />
+          <DataGrid rows={rows} columns={columns}  disableSelectionOnClick className="productListTable" autoHeight hideFooter="true"/>
+
+          {resultPerPage < employeeCount && (
+            <div className="paginationBox">
+              <Pagination
+                activePage={currentPage}
+                itemsCountPerPage={resultPerPage}
+                totalItemsCount={employeeCount}
+                onChange={setCurrentPageNo}
+                nextPageText="Next"
+                prevPageText="Prev"
+                firstPageText="First"
+                lastPageText="Last"
+                itemClass="page-item"
+                linkClass="page-link"
+                activeClass="pageItemActive"
+                activeLinkClass="pageLinkActive"
+              />
+
+            </div>
+          )}
         </div>
       </div>
     </Fragment>

@@ -4,6 +4,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/userModel");
 const EmployeesSchema = require("../models/employeesModel");
 const sendToken = require("../utils/jwtToken");
+const ApiFeatures = require("../utils/apifeatures");
 const router = express.Router();
 
 // Register a User
@@ -116,13 +117,30 @@ router.get(
 router.get(
   "/getUsersAndEmployeeList",
   catchAsyncErrors(async (req, res, next) => {
-    const userList = await User.find();
-    const employeeList = await EmployeesSchema.find();
+    const resultPerPage = 10;
+    const userCount = await User.countDocuments();
+    const employeeCount = await EmployeesSchema.countDocuments();
+
+    const apiFeatureUser = new ApiFeatures(User.find(), req.query)
+    let userList = await apiFeatureUser.query;
+    apiFeatureUser.pagination(resultPerPage);
+    userList = await apiFeatureUser.query;
+
+    const apiFeatureEmployee = new ApiFeatures(EmployeesSchema.find(), req.query)
+    let employeeList = await apiFeatureEmployee.query;
+    apiFeatureEmployee.pagination(resultPerPage);
+    employeeList = await apiFeatureEmployee.query;
+
 
     res.status(200).json({
       success: true,
       userList,
-      employeeList
+      userCount,
+
+      employeeList,
+      employeeCount,
+
+      resultPerPage,
     });
   })
 );

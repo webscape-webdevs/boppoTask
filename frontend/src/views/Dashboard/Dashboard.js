@@ -10,7 +10,7 @@ import MetaData from "../MetaData";
 const Dashboard = () => {
   const dispatch = useDispatch();
 
-  const { userList, employeeList } = useSelector((state) => state.userListSlice);
+  const { userCount, employeeCount } = useSelector((state) => state.userListSlice);
 
   useEffect(() => {
     dispatch(getUsersAndEmployeeList());
@@ -30,14 +30,14 @@ const Dashboard = () => {
           <div className="dashboardSummaryBox2">
             <Link to="/userList">
               <p>Users</p>
-              <p>{userList && userList.length}</p>
+              <p>{userCount}</p>
             </Link>
           </div>
 
           <div className="dashboardSummaryBox2">
             <Link to="/employeeList">
               <p>Employees</p>
-              <p>{employeeList && employeeList.length}</p>
+              <p>{employeeCount}</p>
             </Link>
           </div>
 

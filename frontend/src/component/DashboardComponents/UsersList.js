@@ -5,18 +5,22 @@ import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../../views/MetaData";
 import SideBar from "./Sidebar";
 import { getUsersAndEmployeeList } from "../../slices/userListSlice";
+import { useState } from "react";
+import Pagination from "react-js-pagination";
 
-const UsersList = ({ history }) => {
+const EmployeeList = ({ history }) => {
   const dispatch = useDispatch();
 
-  const { userList } = useSelector((state) => state.userListSlice);
+  const { resultPerPage, userCount, userList } = useSelector((state) => state.userListSlice);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const setCurrentPageNo = (e) => {
+    setCurrentPage(e);
+  };
 
   useEffect(() => {
-
-    dispatch(getUsersAndEmployeeList());
-
-  }, [dispatch]);
+    dispatch(getUsersAndEmployeeList(currentPage));
+  }, [dispatch, currentPage]);
 
   const columns = [
     { field: "id", headerName: "User ID", minWidth: 180, flex: 0.7 },
@@ -27,7 +31,6 @@ const UsersList = ({ history }) => {
       minWidth: 200,
       flex: 0.7,
     },
-
     {
       field: "firstName",
       headerName: "First Name",
@@ -42,16 +45,14 @@ const UsersList = ({ history }) => {
       flex: 0.5,
     },
 
+
     {
       field: "role",
       headerName: "Role",
       type: "number",
       minWidth: 150,
       flex: 0.3,
-
     },
-
-  
   ];
 
   const rows = [];
@@ -69,25 +70,38 @@ const UsersList = ({ history }) => {
 
   return (
     <Fragment>
-      <MetaData title={`USERS LIST `} />
+      <MetaData title={`USER LIST`} />
 
       <div className="dashboard">
         <SideBar />
         <div className="productListContainer">
-          <h1 id="productListHeading">USERS LIST</h1>
+          <h1 id="productListHeading">USER LIST</h1>
 
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            className="productListTable"
-            autoHeight
-          />
+          <DataGrid rows={rows} columns={columns} disableSelectionOnClick className="productListTable" autoHeight hideFooter="true"/>
+
+          {resultPerPage < userCount && (
+            <div className="paginationBox">
+              <Pagination
+                activePage={currentPage}
+                itemsCountPerPage={resultPerPage}
+                totalItemsCount={userCount}
+                onChange={setCurrentPageNo}
+                nextPageText="Next"
+                prevPageText="Prev"
+                firstPageText="First"
+                lastPageText="Last"
+                itemClass="page-item"
+                linkClass="page-link"
+                activeClass="pageItemActive"
+                activeLinkClass="pageLinkActive"
+              />
+              
+            </div>
+          )}
         </div>
       </div>
     </Fragment>
   );
 };
 
-export default UsersList;
+export default EmployeeList;

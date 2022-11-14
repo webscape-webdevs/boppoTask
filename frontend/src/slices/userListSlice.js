@@ -4,9 +4,9 @@ import axios from "axios";
 
 
 
-export const getUsersAndEmployeeList = createAsyncThunk("getUsersAndEmployeeList", async () => {
+export const getUsersAndEmployeeList = createAsyncThunk("getUsersAndEmployeeList", async (currentPage = 1,) => {
   try {
-    const { data } = await axios.get(`/api/v1/user/getUsersAndEmployeeList`);
+    const { data } = await axios.get(`/api/v1/user/getUsersAndEmployeeList?page=${currentPage}`);
 
     return data;
   } catch (error) {
@@ -20,7 +20,10 @@ export const userListSlice = createSlice({
   name: "userList",
   initialState: {
     userList: [],
+    userCount: 0,
     employeeList:[],
+    employeeCount: 0,
+    resultPerPage: 0,
     loading: false,
     error: "",
   },
@@ -37,7 +40,10 @@ export const userListSlice = createSlice({
     },
     [getUsersAndEmployeeList.fulfilled]: (state, { payload }) => {
       state.userList = payload.userList;
+      state.userCount = payload.userCount;
       state.employeeList = payload.employeeList;
+      state.employeeCount = payload.employeeCount;
+      state.resultPerPage = payload.resultPerPage;
       state.loading = false;
     },
     [getUsersAndEmployeeList.rejected]: (state, { error }) => {
