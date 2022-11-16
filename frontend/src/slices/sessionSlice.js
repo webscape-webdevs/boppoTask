@@ -22,12 +22,12 @@ export const employeeLogin = createAsyncThunk("employeeLogin", async ({ employee
   }
 });
 
-export const userRegister = createAsyncThunk("userRegister", async (userData) => {
+export const userRegister = createAsyncThunk("userRegister", async ({myForm}) => {
   try {
-    const { data } = await axios.post(
-      `/api/v1/user/userRegister?firstName=${userData.firstName}&lastName=${userData.lastName}&email=${userData.email}&password=${userData.password}&userType=${userData.selectedOption.value}&organizationName=${userData.organizationName}`
-    );
 
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+
+    const { data } = await axios.post(`/api/v1/user/userRegister`, myForm, config);
     return data.user;
   } catch (error) {
     throw new Error(error);

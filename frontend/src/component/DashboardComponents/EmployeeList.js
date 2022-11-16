@@ -4,9 +4,13 @@ import "./employeeList.css";
 import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../../views/MetaData";
 import SideBar from "./Sidebar";
-import { getUsersAndEmployeeList } from "../../slices/userListSlice";
+import { getUsersAndEmployeeList, deleteUserOrEmployee } from "../../slices/userListSlice";
 import { useState } from "react";
 import Pagination from "react-js-pagination";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { Link } from "react-router-dom";
+import { Button } from "@material-ui/core";
 
 const EmployeeList = ({ history }) => {
   const dispatch = useDispatch();
@@ -18,24 +22,31 @@ const EmployeeList = ({ history }) => {
     setCurrentPage(e);
   };
 
+  const deleteEmployeeHandler = (id) => {
+    let userType = "employee";
+    dispatch(deleteUserOrEmployee({ id, userType }));
+  };
+
   useEffect(() => {
     dispatch(getUsersAndEmployeeList(currentPage));
   }, [dispatch, currentPage]);
 
   const columns = [
-    { field: "id", headerName: "Employee ID", minWidth: 180, flex: 0.7 },
+    { field: "id", headerName: "Employee ID", minWidth: 180, flex: 0.7, sortable: true, },
 
     {
       field: "email",
       headerName: "Email",
       minWidth: 200,
       flex: 0.7,
+      sortable: true,
     },
     {
       field: "firstName",
       headerName: "First Name",
       minWidth: 150,
       flex: 0.5,
+      sortable: true,
     },
 
     {
@@ -43,6 +54,7 @@ const EmployeeList = ({ history }) => {
       headerName: "Last Name",
       minWidth: 150,
       flex: 0.5,
+      sortable: true,
     },
 
     {
@@ -50,6 +62,7 @@ const EmployeeList = ({ history }) => {
       headerName: "Organization",
       minWidth: 150,
       flex: 0.5,
+      sortable: true,
     },
 
     {
@@ -58,6 +71,29 @@ const EmployeeList = ({ history }) => {
       type: "number",
       minWidth: 150,
       flex: 0.3,
+      sortable: false,
+    },
+
+    {
+      field: "actions",
+      flex: 0.5,
+      headerName: "Actions",
+      minWidth: 150,
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <Fragment>
+            <Link to={`/updateEmployee/${params.getValue(params.id, "id")}`}>
+              <EditIcon />
+            </Link>
+
+            <Button onClick={() => deleteEmployeeHandler(params.getValue(params.id, "id"))}>
+              <DeleteIcon />
+            </Button>
+          </Fragment>
+        );
+      },
     },
   ];
 
@@ -84,7 +120,7 @@ const EmployeeList = ({ history }) => {
         <div className="productListContainer">
           <h1 id="productListHeading">EMPLOYEES LIST</h1>
 
-          <DataGrid rows={rows} columns={columns}  disableSelectionOnClick className="productListTable" autoHeight hideFooter="true"/>
+          <DataGrid rows={rows} columns={columns} disableSelectionOnClick className="productListTable" autoHeight hideFooter="true" />
 
           {resultPerPage < employeeCount && (
             <div className="paginationBox">
@@ -102,7 +138,6 @@ const EmployeeList = ({ history }) => {
                 activeClass="pageItemActive"
                 activeLinkClass="pageLinkActive"
               />
-
             </div>
           )}
         </div>

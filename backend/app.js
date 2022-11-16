@@ -23,9 +23,11 @@ app.use(fileUpload());
 
 const user = require("./routes/userRoute");
 const session = require("./routes/sessionRoute");
+const employee = require("./routes/employeeRoute");
 
 app.use("/api/v1/user", user);
 app.use("/api/v1/session", session);
+app.use("/api/v1/employee", employee);
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 

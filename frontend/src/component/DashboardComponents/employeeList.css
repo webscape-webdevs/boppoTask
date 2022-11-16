@@ -51,6 +51,10 @@
   margin-right: unset !important;
 }
 
+.MuiDataGrid-root .MuiDataGrid-cell--textRight.MuiDataGrid-cell--withRenderer, .MuiDataGrid-root .MuiDataGrid-cell--textRight.MuiDataGrid-cell--editing {
+  justify-content: center !important;
+}
+
 .paginationBox {
   display: flex;
   justify-content: center;

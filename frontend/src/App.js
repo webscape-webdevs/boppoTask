@@ -12,6 +12,8 @@ import Dashboard from "./views/Dashboard/Dashboard";
 import UsersList from "./component/DashboardComponents/UsersList";
 import EmployeeList from "./component/DashboardComponents/EmployeeList";
 import Navbar from "./component/Header/Navbar";
+import UpdateUser from "./component/DashboardComponents/updateUser";
+import UpdateEmployee from "./component/DashboardComponents/updateEmployee";
 import { getSession } from "./slices/sessionSlice";
 
 function App() {
@@ -42,6 +44,10 @@ function App() {
         <ProtectedRoute exact path="/userList" component={UsersList} />
 
         <Route exact path="/login" component={LoginSignUp} />
+
+        <Route exact path="/updateUser/:id" component={UpdateUser} />
+
+        <Route exact path="/updateEmployee/:id" component={UpdateEmployee} />
       </Switch>
 
       {/* <Footer /> */}

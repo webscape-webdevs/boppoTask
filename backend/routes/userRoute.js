@@ -8,19 +8,32 @@ const ApiFeatures = require("../utils/apifeatures");
 const router = express.Router();
 const { isAuthenticatedUser } = require("../middleware/auth");
 const createError = require("http-errors");
+const cloudinary = require("cloudinary");
 
 // Register a User
 router.post(
   "/userRegister",
   catchAsyncErrors(async (req, res, next) => {
-    const { firstName, lastName, email, password, userType, organizationName } = req.query;
+    const { firstName, lastName, email, password, userType, organizationName, empId } = req.body;
+
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "boppo/avatars",
+      width: 150,
+      crop: "scale",
+    });
+
     if (userType === "employee") {
       const user = await EmployeesSchema.create({
         firstName,
         lastName,
         email,
         organizationName,
+        empId,
         password,
+        avatar: {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        },
       });
 
       sendToken(user, 201, res);
@@ -30,6 +43,10 @@ router.post(
         lastName,
         email,
         password,
+        avatar: {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        },
       });
 
       sendToken(user, 201, res);

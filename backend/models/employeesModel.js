@@ -33,9 +33,23 @@ const employeesSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please Enter Organization Name"],
   },
+  empId: {
+    type: String,
+    required: [true, "Please Enter Employee Id"],
+  },
   role: {
     type: String,
     default: "employee",
+  },
+  avatar: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
   },
   createdAt: {
     type: Date,
