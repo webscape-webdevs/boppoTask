@@ -41,7 +41,7 @@ router.post("/userRegister", async (req, res, next) => {
       width: 150,
       crop: "scale",
     });
-    console.log("hii");
+ 
     if (userType === "employee") {
       const user = await EmployeesSchema.create({
         firstName,
