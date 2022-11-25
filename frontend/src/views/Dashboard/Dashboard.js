@@ -6,18 +6,20 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getUsersAndEmployeeList } from "../../slices/userListSlice";
 import MetaData from "../MetaData";
+import Loader from "../../component/Loader/Loader";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
 
-  const { userCount, employeeCount } = useSelector((state) => state.userListSlice);
+  const { userCount, employeeCount, loading } = useSelector((state) => state.userListSlice);
 
   useEffect(() => {
     dispatch(getUsersAndEmployeeList());
   }, [dispatch]);
 
-
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="dashboard">
       <MetaData title="Dashboard - Admin Panel" />
       <Sidebar />
@@ -26,7 +28,6 @@ const Dashboard = () => {
         <Typography component="h1">Dashboard</Typography>
 
         <div className="dashboardSummary">
-
           <div className="dashboardSummaryBox2">
             <Link to="/userList">
               <p>Users</p>
@@ -40,7 +41,6 @@ const Dashboard = () => {
               <p>{employeeCount}</p>
             </Link>
           </div>
-
         </div>
       </div>
     </div>

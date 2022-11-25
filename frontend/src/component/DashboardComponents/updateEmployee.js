@@ -7,13 +7,14 @@ import MetaData from "../../views/MetaData";
 import SideBar from "./Sidebar";
 import { updateUserOrEmployee } from "../../slices/userListSlice";
 import { useHistory } from "react-router-dom";
+import Loader from "../Loader/Loader";
 
 const UpdateEmployee = ({ match }) => {
   const dispatch = useDispatch();
 
   const history = useHistory();
 
-  const { employeeList } = useSelector((state) => state.userListSlice);
+  const { employeeList, loading } = useSelector((state) => state.userListSlice);
 
   const userId = match.params.id;
 
@@ -26,10 +27,9 @@ const UpdateEmployee = ({ match }) => {
     organizationName: userDetails[0].organizationName,
   });
 
-  const [avatar, setAvatar] = useState(userDetails[0].avatar? userDetails[0].avatar.url: "/Profile.png");
- 
-  const [avatarPreview, setAvatarPreview] = useState(userDetails[0].avatar? userDetails[0].avatar.url: "/Profile.png");
+  const [avatar, setAvatar] = useState(userDetails[0].avatar ? userDetails[0].avatar.url : "/Profile.png");
 
+  const [avatarPreview, setAvatarPreview] = useState(userDetails[0].avatar ? userDetails[0].avatar.url : "/Profile.png");
 
   let publicId = "";
 
@@ -76,7 +76,9 @@ const UpdateEmployee = ({ match }) => {
     if (updatedUser.meta.requestStatus === "fulfilled") history.push("/employeeList");
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <Fragment>
       <MetaData title="Update User" />
       <div className="dashboard">

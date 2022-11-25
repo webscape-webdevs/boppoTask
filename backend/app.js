@@ -19,13 +19,11 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 
-// Route Imports
 
-const user = require("./routes/userRoute");
+// Route Imports
 const session = require("./routes/sessionRoute");
 const employee = require("./routes/employeeRoute");
 
-app.use("/api/v1/user", user);
 app.use("/api/v1/session", session);
 app.use("/api/v1/employee", employee);
 

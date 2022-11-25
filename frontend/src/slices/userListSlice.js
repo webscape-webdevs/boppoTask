@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const getUsersAndEmployeeList = createAsyncThunk("getUsersAndEmployeeList", async (currentPage = 1) => {
   try {
-    const { data } = await axios.get(`/api/v1/user/getUsersAndEmployeeList?page=${currentPage}`);
+    const { data } = await axios.get(`/api/v1/employee/getUsersAndEmployeeList?page=${currentPage}`);
 
     return data;
   } catch (error) {

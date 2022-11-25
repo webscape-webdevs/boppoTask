@@ -7,7 +7,7 @@ import store from "./store";
 
 import Home from "./views/Home/Home";
 import LoginSignUp from "./component/LoginSignUp/LoginSignUp";
-import ProtectedRoute from "./component/Route/ProtectedRoute";
+import ProtectedRoute from "./component/ProtectedRoutes/ProtectedRoute";
 import Dashboard from "./views/Dashboard/Dashboard";
 import UsersList from "./component/DashboardComponents/UsersList";
 import EmployeeList from "./component/DashboardComponents/EmployeeList";

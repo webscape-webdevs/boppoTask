@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const userLogin = createAsyncThunk("userLogin", async ({ userEmail, userPassword }) => {
   try {
-    const { data } = await axios.post(`/api/v1/user/userLogin?email=${userEmail}&password=${userPassword}`);
+    const { data } = await axios.post(`/api/v1/session/userLogin?email=${userEmail}&password=${userPassword}`);
     return data.user;
   } catch (error) {
     console.log(error);
@@ -14,7 +14,7 @@ export const userLogin = createAsyncThunk("userLogin", async ({ userEmail, userP
 
 export const employeeLogin = createAsyncThunk("employeeLogin", async ({ employeeEmail, employeePassword }) => {
   try {
-    const { data } = await axios.post(`/api/v1/user/employeeLogin?email=${employeeEmail}&password=${employeePassword}`);
+    const { data } = await axios.post(`/api/v1/session/employeeLogin?email=${employeeEmail}&password=${employeePassword}`);
     return data.user;
   } catch (error) {
     console.log(error);
@@ -27,7 +27,7 @@ export const userRegister = createAsyncThunk("userRegister", async ({myForm}) =>
 
     const config = { headers: { "Content-Type": "multipart/form-data" } };
 
-    const { data } = await axios.post(`/api/v1/user/userRegister`, myForm, config);
+    const { data } = await axios.post(`/api/v1/session/userRegister`, myForm, config);
     return data.user;
   } catch (error) {
     throw new Error(error);
@@ -46,7 +46,7 @@ export const getSession = createAsyncThunk("getSession", async () => {
 
 export const userLogout = createAsyncThunk("userLogout", async () => {
   try {
-    const { data } = await axios.get(`/api/v1/user/userLogout`);
+    const { data } = await axios.get(`/api/v1/session/userLogout`);
 
     return data.user;
   } catch (error) {

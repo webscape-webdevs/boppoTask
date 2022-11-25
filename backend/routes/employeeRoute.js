@@ -1,6 +1,5 @@
 const express = require("express");
 const ErrorHander = require("../utils/errorhander");
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/userModel");
 const EmployeesSchema = require("../models/employeesModel");
 const sendToken = require("../utils/jwtToken");
@@ -8,26 +7,36 @@ const ApiFeatures = require("../utils/apifeatures");
 const router = express.Router();
 const { isAuthenticatedUser } = require("../middleware/auth");
 const createError = require("http-errors");
-const { findOneAndDelete } = require("../models/userModel");
 const cloudinary = require("cloudinary");
 
-// Delete a User
-router.delete("/deleteUserOrEmployee", isAuthenticatedUser, async (req, res, next) => {
+// Get user and employee list
+router.get("/getUsersAndEmployeeList", isAuthenticatedUser, async (req, res, next) => {
   try {
     if (req.employee) {
-      const { userId, userType } = req.query;
+      const resultPerPage = 10;
+      const userCount = await User.countDocuments();
+      const employeeCount = await EmployeesSchema.countDocuments();
 
-      if (userType === "user") {
-        const deletedUser = await User.findOneAndDelete({ _id: userId });
+      const apiFeatureUser = new ApiFeatures(User.find(), req.query);
+      let userList = await apiFeatureUser.query;
+      apiFeatureUser.pagination(resultPerPage);
+      userList = await apiFeatureUser.query;
 
-        res.status(201).json({ deletedUser });
-      } else if (userType === "employee") {
-        const deletedUser = await EmployeesSchema.findOneAndDelete({
-          _id: userId,
-        });
+      const apiFeatureEmployee = new ApiFeatures(EmployeesSchema.find(), req.query);
+      let employeeList = await apiFeatureEmployee.query;
+      apiFeatureEmployee.pagination(resultPerPage);
+      employeeList = await apiFeatureEmployee.query;
 
-        res.status(201).json({ deletedUser });
-      }
+      res.status(200).json({
+        success: true,
+        userList,
+        userCount,
+
+        employeeList,
+        employeeCount,
+
+        resultPerPage,
+      });
     } else {
       return next(new ErrorHander("Not Authorized", 401));
     }
@@ -36,26 +45,21 @@ router.delete("/deleteUserOrEmployee", isAuthenticatedUser, async (req, res, nex
   }
 });
 
+// Update User
 router.put("/updateUserOrEmployee", isAuthenticatedUser, async (req, res, next) => {
   try {
     if (req.employee) {
       const { userId, userType, firstName, lastName, email, organizationName, publicId } = req.body;
-    
 
-        if(publicId !== ""){
-      
-          await cloudinary.v2.uploader.destroy(publicId);
-    
-        }
-     
-        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-          folder: "boppo/avatars",
-          width: 150,
-          crop: "scale",
-        });
-      
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "boppo/avatars",
+        width: 150,
+        crop: "scale",
+      });
 
-
+      if (publicId !== "") {
+        await cloudinary.v2.uploader.destroy(publicId);
+      }
 
       if (userType === "user") {
         const updatedUser = await User.findOneAndUpdate(
@@ -106,6 +110,31 @@ router.put("/updateUserOrEmployee", isAuthenticatedUser, async (req, res, next) 
         );
 
         res.status(201).json({ updatedUser });
+      }
+    } else {
+      return next(new ErrorHander("Not Authorized", 401));
+    }
+  } catch (error) {
+    return next(createError.InternalServerError(error));
+  }
+});
+
+// Delete a User
+router.delete("/deleteUserOrEmployee", isAuthenticatedUser, async (req, res, next) => {
+  try {
+    if (req.employee) {
+      const { userId, userType } = req.query;
+
+      if (userType === "user") {
+        const deletedUser = await User.findOneAndDelete({ _id: userId });
+
+        res.status(201).json({ deletedUser });
+      } else if (userType === "employee") {
+        const deletedUser = await EmployeesSchema.findOneAndDelete({
+          _id: userId,
+        });
+
+        res.status(201).json({ deletedUser });
       }
     } else {
       return next(new ErrorHander("Not Authorized", 401));

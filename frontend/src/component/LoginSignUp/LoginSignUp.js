@@ -35,12 +35,11 @@ const LoginSignUp = ({ history, location }) => {
     email: "",
     password: "",
     organizationName: "",
-    empId: "",
   });
 
   const [selectedOption, setSelectedOption] = useState("user");
 
-  const { firstName, lastName, email, password, organizationName, empId } = user;
+  const { firstName, lastName, email, password, organizationName } = user;
 
   const userLoginSubmit = (e) => {
     e.preventDefault();
@@ -62,12 +61,11 @@ const LoginSignUp = ({ history, location }) => {
     myForm.set("email", email);
     myForm.set("password", password);
     myForm.set("organizationName", organizationName);
-    myForm.set("empId", empId);
     myForm.set("avatar", avatar);
     myForm.set("userType", selectedOption.value);
 
-    // let userData = { firstName, lastName, email, password, organizationName, empId, selectedOption, avatar };
-    dispatch(userRegister({myForm}));
+    // let userData = { firstName, lastName, email, password, organizationName, selectedOption, avatar };
+    dispatch(userRegister({ myForm }));
   };
 
   const registerDataChange = (e) => {
@@ -132,9 +130,9 @@ const LoginSignUp = ({ history, location }) => {
                   </div>
                   <button ref={switcherTab}></button>
                 </div>
+                <div className="loginSignupDiv">
+                  {/* ---------------------Login ---------------------*/}
 
-                {/* ---------------------Login ---------------------*/}
-                <div className="test">
                   <div className="loginFormContainer" ref={loginTab}>
                     <form className="loginForm" onSubmit={userLoginSubmit}>
                       <h2> User Login </h2>
@@ -198,7 +196,6 @@ const LoginSignUp = ({ history, location }) => {
                           <div className="signUpOrganization">
                             <BusinessIcon />
                             <input type="text" placeholder="Organization Name" required name="organizationName" value={organizationName} onChange={registerDataChange} />
-                            <input type="text" placeholder="Employee Id" required name="empId" value={empId} onChange={registerDataChange} />
                           </div>
                         </>
                       ) : null}

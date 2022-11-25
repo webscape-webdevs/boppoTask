@@ -11,7 +11,7 @@
   left: 0;
 }
 
-.test{
+.loginSignupDiv{
   display: flex;
   flex-direction: column;
 }
@@ -179,7 +179,7 @@
 }
 
 .shiftToNeutralForm {
-  transform: translateX(0%) translateY(-210%);
+  transform: translateX(0%) translateY(-224%);
 }
 
 .shiftToRight {
