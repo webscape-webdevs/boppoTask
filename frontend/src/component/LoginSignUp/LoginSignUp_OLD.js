@@ -4,10 +4,11 @@ import Loader from "../Loader/Loader";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import FaceIcon from "@material-ui/icons/Face";
+import BusinessIcon from "@material-ui/icons/Business";
 import { useDispatch, useSelector } from "react-redux";
-import {  userLogin, userRegister } from "../../slices/sessionSlice";
+import { employeeLogin, userLogin, userRegister } from "../../slices/sessionSlice";
 import { useAlert } from "react-alert";
-
+import Select from "react-select";
 
 const LoginSignUp = ({ history, location }) => {
   const dispatch = useDispatch();
@@ -19,22 +20,35 @@ const LoginSignUp = ({ history, location }) => {
   const registerTab = useRef(null);
   const switcherTab = useRef(null);
 
-  const [accNumber, setAccountNumber] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+
+  const [employeeEmail, setEmployeeEmail] = useState("");
+  const [employeePassword, setEmployeePassword] = useState("");
+
+  const [avatar, setAvatar] = useState("/Profile.png");
+  const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
-    accountNumber: "",
+    email: "",
     password: "",
     organizationName: "",
   });
 
-  const { firstName, lastName, accountNumber, password } = user;
+  const [selectedOption, setSelectedOption] = useState("user");
+
+  const { firstName, lastName, email, password, organizationName } = user;
 
   const userLoginSubmit = (e) => {
     e.preventDefault();
-    dispatch(userLogin({ accNumber, userPassword }));
+    dispatch(userLogin({ userEmail, userPassword }));
+  };
+
+  const employeeLoginSubmit = (e) => {
+    e.preventDefault();
+    dispatch(employeeLogin({ employeeEmail, employeePassword }));
   };
 
   const registerSubmit = (e) => {
@@ -44,8 +58,11 @@ const LoginSignUp = ({ history, location }) => {
 
     myForm.set("firstName", firstName);
     myForm.set("lastName", lastName);
-    myForm.set("accountNumber", accountNumber);
+    myForm.set("email", email);
     myForm.set("password", password);
+    myForm.set("organizationName", organizationName);
+    myForm.set("avatar", avatar);
+    myForm.set("userType", selectedOption.value);
 
     // let userData = { firstName, lastName, email, password, organizationName, selectedOption, avatar };
     dispatch(userRegister({ myForm }));
@@ -54,6 +71,13 @@ const LoginSignUp = ({ history, location }) => {
   const registerDataChange = (e) => {
     if (e.target.name === "avatar") {
       const reader = new FileReader();
+
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setAvatarPreview(reader.result);
+          setAvatar(reader.result);
+        }
+      };
 
       reader.readAsDataURL(e.target.files[0]);
     } else {
@@ -111,9 +135,10 @@ const LoginSignUp = ({ history, location }) => {
 
                   <div className="loginFormContainer" ref={loginTab}>
                     <form className="loginForm" onSubmit={userLoginSubmit}>
+                      <h2> User Login </h2>
                       <div className="loginEmail">
                         <MailOutlineIcon />
-                        <input type="text" placeholder="Account Number" required value={accNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+                        <input type="email" placeholder="Email" required value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
                       </div>
                       <div className="loginPassword">
                         <LockOpenIcon />
@@ -123,6 +148,19 @@ const LoginSignUp = ({ history, location }) => {
                       <input type="submit" value="Login" className="loginBtn" />
                     </form>
 
+                    <form className="employeeLoginForm" onSubmit={employeeLoginSubmit}>
+                      <h2> Employee Login </h2>
+                      <div className="loginEmail">
+                        <MailOutlineIcon />
+                        <input type="email" placeholder="Email" required value={employeeEmail} onChange={(e) => setEmployeeEmail(e.target.value)} />
+                      </div>
+                      <div className="loginPassword">
+                        <LockOpenIcon />
+                        <input type="password" placeholder="Password" required value={employeePassword} onChange={(e) => setEmployeePassword(e.target.value)} />
+                      </div>
+
+                      <input type="submit" value="Login" className="loginBtn" />
+                    </form>
                   </div>
 
                   {/* ---------------------Signup ---------------------*/}
@@ -138,13 +176,40 @@ const LoginSignUp = ({ history, location }) => {
                       </div>
                       <div className="signUpEmail">
                         <MailOutlineIcon />
-                        <input type="text" placeholder="Account Number" required name="accountNumber" value={accountNumber} onChange={registerDataChange} />
+                        <input type="email" placeholder="Email" required name="email" value={email} onChange={registerDataChange} />
                       </div>
+                      <div className="signUpEmail">
+                        <Select
+                          className="userType"
+                          placeholder="Select User Type"
+                          defaultValue={"User"}
+                          onChange={setSelectedOption}
+                          options={[
+                            { value: "user", label: "User" },
+                            { value: "employee", label: "Employee" },
+                          ]}
+                        />
+                      </div>
+
+                      {selectedOption && selectedOption.value === "employee" ? (
+                        <>
+                          <div className="signUpOrganization">
+                            <BusinessIcon />
+                            <input type="text" placeholder="Organization Name" required name="organizationName" value={organizationName} onChange={registerDataChange} />
+                          </div>
+                        </>
+                      ) : null}
+
                       <div className="signUpPassword">
                         <LockOpenIcon />
                         <input type="password" placeholder="Password" required name="password" value={password} onChange={registerDataChange} />
                       </div>
-                
+
+                      <div id="registerImage">
+                        <img src={avatarPreview} alt="Avatar Preview" />
+                        <input type="file" name="avatar" accept="image/*" onChange={registerDataChange} />
+                      </div>
+
                       <input type="submit" value="Register" className="signUpBtn" />
                     </form>
                   </div>

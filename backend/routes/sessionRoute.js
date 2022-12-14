@@ -34,42 +34,43 @@ router.get("/getSession", isAuthenticatedUser, async (req, res, next) => {
 // Register a User
 router.post("/userRegister", async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password, userType, organizationName } = req.body;
+    // const { firstName, lastName, email, password, userType, organizationName } = req.body;
+    const { firstName, lastName, accountNumber, password} = req.body;
 
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-      folder: "boppo/avatars",
-      width: 150,
-      crop: "scale",
-    });
+    // const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    //   folder: "boppo/avatars",
+    //   width: 150,
+    //   crop: "scale",
+    // });
  
-    if (userType === "employee") {
-      const user = await EmployeesSchema.create({
-        firstName,
-        lastName,
-        email,
-        organizationName,
-        password,
-        avatar: {
-          public_id: myCloud.public_id,
-          url: myCloud.secure_url,
-        },
-      });
+    // if (userType === "employee") {
+    //   const user = await EmployeesSchema.create({
+    //     firstName,
+    //     lastName,
+    //     email,
+    //     organizationName,
+    //     password,
+    //     // avatar: {
+    //     //   public_id: myCloud.public_id,
+    //     //   url: myCloud.secure_url,
+    //     // },
+    //   });
 
-      sendToken(user, 201, res);
-    } else {
+    //   sendToken(user, 201, res);
+    // } else {
       const user = await User.create({
         firstName,
         lastName,
-        email,
+        accountNumber,
         password,
-        avatar: {
-          public_id: myCloud.public_id,
-          url: myCloud.secure_url,
-        },
+        // avatar: {
+        //   public_id: myCloud.public_id,
+        //   url: myCloud.secure_url,
+        // },
       });
 
       sendToken(user, 201, res);
-    }
+    // }
   } catch (error) {
     return next(createError.InternalServerError(error));
   }
@@ -78,15 +79,15 @@ router.post("/userRegister", async (req, res, next) => {
 // Login User
 router.post("/userLogin", async (req, res, next) => {
   try {
-    const { email, password } = req.query;
+    const { accountNumber, password } = req.query;
 
     // checking if user has given password and email both
 
-    if (!email || !password) {
+    if (!accountNumber || !password) {
       return next(new ErrorHander("Please Enter Email & Password", 400));
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ accountNumber }).select("+password");
 
     if (!user) {
       return next(new ErrorHander("Invalid email or password", 401));

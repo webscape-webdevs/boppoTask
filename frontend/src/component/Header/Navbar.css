@@ -41,12 +41,13 @@
 }
 
 
-a{
+.navbar-buttons{
     text-decoration: none;
     color: white;
 }
 
 .navbar-signup-button{
+    text-decoration: none;
     color: #fff;
     font-family:'Manrope', sans-serif;
     font-weight: 500;

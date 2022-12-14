@@ -2,19 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
-export const userLogin = createAsyncThunk("userLogin", async ({ userEmail, userPassword }) => {
+export const userLogin = createAsyncThunk("userLogin", async ({ accNumber, userPassword }) => {
   try {
-    const { data } = await axios.post(`/api/v1/session/userLogin?email=${userEmail}&password=${userPassword}`);
-    return data.user;
-  } catch (error) {
-    console.log(error);
-    throw new Error(error);
-  }
-});
-
-export const employeeLogin = createAsyncThunk("employeeLogin", async ({ employeeEmail, employeePassword }) => {
-  try {
-    const { data } = await axios.post(`/api/v1/session/employeeLogin?email=${employeeEmail}&password=${employeePassword}`);
+    const { data } = await axios.post(`/api/v1/session/userLogin?accountNumber=${accNumber}&password=${userPassword}`);
     return data.user;
   } catch (error) {
     console.log(error);
@@ -95,21 +85,6 @@ export const userSlice = createSlice({
       state.loading = false;
     },
     [userLogin.rejected]: (state, { error }) => {
-      state.error = error.message;
-      state.loading = false;
-      state.isAuthenticated = false;
-    },
-
-    [employeeLogin.pending]: (state, { payload }) => {
-      state.loading = true;
-      state.isAuthenticated = false;
-    },
-    [employeeLogin.fulfilled]: (state, { payload }) => {
-      state.user = payload;
-      state.isAuthenticated = true;
-      state.loading = false;
-    },
-    [employeeLogin.rejected]: (state, { error }) => {
       state.error = error.message;
       state.loading = false;
       state.isAuthenticated = false;

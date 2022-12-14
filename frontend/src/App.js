@@ -7,7 +7,8 @@ import store from "./store";
 
 import Home from "./views/Home/Home";
 import LoginSignUp from "./component/LoginSignUp/LoginSignUp";
-import ProtectedRoute from "./component/ProtectedRoutes/ProtectedRoute";
+import ProtectedRouteAdmin from "./component/ProtectedRoutes/ProtectedRouteAdmin";
+import ProtectedRouteUser from "./component/ProtectedRoutes/ProtectedRouteUser";
 import Dashboard from "./views/Dashboard/Dashboard";
 import UsersList from "./component/DashboardComponents/UsersList";
 import EmployeeList from "./component/DashboardComponents/EmployeeList";
@@ -35,7 +36,7 @@ function App() {
       <Switch>
         <Route exact path="/" component={LoginSignUp} />
 
-        <Route exact path="/home" component={Home} />
+        <ProtectedRouteUser exact path="/home" component={Home} />
 
         <Route exact path="/login" component={LoginSignUp} />
 
@@ -43,11 +44,11 @@ function App() {
 
         <Route exact path="/updateEmployee/:id" component={UpdateEmployee} />
 
-        <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+        <ProtectedRouteAdmin exact path="/dashboard" component={Dashboard} />
 
-        <ProtectedRoute exact path="/employeeList" component={EmployeeList} />
+        <ProtectedRouteAdmin exact path="/employeeList" component={EmployeeList} />
 
-        <ProtectedRoute exact path="/userList" component={UsersList} />
+        <ProtectedRouteAdmin exact path="/userList" component={UsersList} />
       </Switch>
 
       {/* <Footer /> */}

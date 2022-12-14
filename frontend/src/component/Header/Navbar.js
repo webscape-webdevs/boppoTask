@@ -18,11 +18,14 @@ export default function Navbar() {
       <div className="navbar-container">
         <div className="navbar-links">
           <div className="navbar-links-container">
-            <p>
-              <Link className="navbar-buttons" to="/home">
-                Home
-              </Link>
-            </p>
+            {user && user.role && (
+              <p>
+                <Link className="navbar-buttons" to="/home">
+                  Home
+                </Link>
+              </p>
+            )}
+
             {user && user.role === "employee" && (
               <p>
                 {" "}
@@ -40,9 +43,7 @@ export default function Navbar() {
             </button>
           ) : (
             <button className="navbar-signup-button" type="button">
-              <Link to="/login">
-                Login / Sign Up
-              </Link>
+              <Link to="/login">Login / Sign Up</Link>
             </button>
           )}
         </div>

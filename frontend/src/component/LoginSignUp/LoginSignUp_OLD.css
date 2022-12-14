@@ -19,7 +19,7 @@
 .LoginSignUpBox {
   background-color: white;
   width: 25vw;
-  height: 55vh;
+  height: 70vh;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -179,7 +179,7 @@
 }
 
 .shiftToNeutralForm {
-  transform: translateX(0%) translateY(-100%);
+  transform: translateX(0%) translateY(-240%);
 }
 
 .shiftToRight {
